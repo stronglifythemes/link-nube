@@ -1,0 +1,146 @@
+<!DOCTYPE html><html lang="es"><head>
+	
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width"/>
+<meta name="builder" content="Stronglify"/>
+<link rel="icon" type="image/x-icon" href="https://media.stronglify.com/295/favicon-1790369824-1791468407.svg"/>
+<title>NUBE 8</title>
+<meta name="description" content="Estudio indie de videojuegos en pixel art. Hacemos mundos pequeños con mucho cielo."/>
+<meta name="robots" content="index"/>
+<link rel="canonical" href="https://stronglifythemes.github.io/"/><style>
+html{line-height:1.15;-webkit-text-size-adjust:100%}body{margin:0}main{display:block}h1{font-size:2em;margin:.67em 0}hr{box-sizing:content-box;height:0;overflow:visible}pre{font-family:monospace,monospace;font-size:1em}a{background-color:transparent}abbr[title]{border-bottom:none;text-decoration:underline;text-decoration:underline dotted}b,strong{font-weight:bolder}code,kbd,samp{font-family:monospace,monospace;font-size:1em}small{font-size:80%}sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}sub{bottom:-.25em}sup{top:-.5em}img{border-style:none}button,input,optgroup,select,textarea{font-family:inherit;font-size:100%;line-height:1.15;margin:0}button,input{overflow:visible}button,select{text-transform:none}button,[type=button],[type=reset],[type=submit]{-webkit-appearance:button}button::-moz-focus-inner,[type=button]::-moz-focus-inner,[type=reset]::-moz-focus-inner,[type=submit]::-moz-focus-inner{border-style:none;padding:0}button:-moz-focusring,[type=button]:-moz-focusring,[type=reset]:-moz-focusring,[type=submit]:-moz-focusring{outline:1px dotted ButtonText}
+fieldset{padding:.35em .75em .625em}legend{box-sizing:border-box;color:inherit;display:table;max-width:100%;padding:0;white-space:normal}progress{vertical-align:baseline}textarea{overflow:auto}[type=checkbox],[type=radio]{box-sizing:border-box;padding:0}[type=number]::-webkit-inner-spin-button,[type=number]::-webkit-outer-spin-button{height:auto}[type=search]{-webkit-appearance:textfield;outline-offset:-2px}[type=search]::-webkit-search-decoration{-webkit-appearance:none}::-webkit-file-upload-button{-webkit-appearance:button;font:inherit}details{display:block}summary{display:list-item}template{display:none}[hidden]{display:none}img{max-width:100%;height:auto}
+</style><link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin=""/>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&amp;family=VT323&amp;display=swap" rel="stylesheet"/>
+<script src="https://media.stronglify.com/tailwind-play-3.4.17.js"></script>
+<script>tailwind.config={future:{hoverOnlyWhenSupported:true},theme:{extend:{colors:{night:"#0F1B2D",dusk:"#2E4A5C",haze:"#B8C3C4",cream:"#F2EFD8"},fontFamily:{display:['"Press Start 2P"',"monospace"],pixel:["VT323","monospace"]}}}};</script>
+<style>:root{--notch:polygon(0 8px,4px 8px,4px 4px,8px 4px,8px 0,calc(100% - 8px) 0,calc(100% - 8px) 4px,calc(100% - 4px) 4px,calc(100% - 4px) 8px,100% 8px,100% calc(100% - 8px),calc(100% - 4px) calc(100% - 8px),calc(100% - 4px) calc(100% - 4px),calc(100% - 8px) calc(100% - 4px),calc(100% - 8px) 100%,8px 100%,8px calc(100% - 4px),4px calc(100% - 4px),4px calc(100% - 8px),0 calc(100% - 8px))}.notched{clip-path:var(--notch);background-image:linear-gradient(#f2efd8 0 0),linear-gradient(#f2efd8 0 0),linear-gradient(#f2efd8 0 0),linear-gradient(#f2efd8 0 0);background-size:4px 4px;background-repeat:no-repeat;background-position:left 4px top 4px,right 4px top 4px,left 4px bottom 4px,right 4px bottom 4px}.press{position:relative}.press::before{content:"";position:absolute;inset:0;transform:translateY(4px);background:#0f1b2d;clip-path:var(--notch)}.press>a{-webkit-tap-highlight-color:transparent}.press:has(>a:focus-visible){outline:4px dashed #f2efd8;outline-offset:4px}#sky{position:fixed;top:0;left:0;width:100%;height:100vh;height:100lvh}</style></head>
+<body class="min-h-dvh overflow-x-hidden bg-night font-pixel text-[22px] leading-[1.2] text-cream selection:bg-cream selection:text-night">
+  <canvas id="sky" class="pointer-events-none [image-rendering:pixelated]" aria-hidden="true"></canvas>
+<script>(function(){const canvas=document.getElementById("sky");const ctx=canvas.getContext("2d");const palette=[[15,27,45],[46,74,92],[184,195,196],[242,239,216]];const bayer=[0,8,2,10,12,4,14,6,3,11,1,9,15,7,13,5].map(v=>(v+.5)/16);const scale=3;const hash=(x,y)=>{const s=Math.sin(x*127.1+y*311.7)*43758.5453;return s-Math.floor(s)};const smooth=t=>t*t*(3-2*t);function noise(x,y){const xi=Math.floor(x),yi=Math.floor(y);const xf=smooth(x-xi),yf=smooth(y-yi);const a=hash(xi,yi),b=hash(xi+1,yi),c=hash(xi,yi+1),d=hash(xi+1,yi+1);return a+(b-a)*xf+(c-a)*yf+(a-b-c+d)*xf*yf}function fbm(x,y){let v=0,amp=.5;for(let o=0;o<5;o++){v+=amp*noise(x,y);x*=2;y*=2;amp*=.5}return v}let size="",raf=0;function draw(){const w=Math.ceil(canvas.clientWidth/scale),h=Math.ceil(canvas.clientHeight/scale);if(w+"x"+h===size)return;size=w+"x"+h;canvas.width=w;canvas.height=h;const img=ctx.createImageData(w,h);const d=img.data;const unit=90;for(let y=0;y<h;y++){for(let x=0;x<w;x++){const nx=x/unit,ny=y/unit;const diag=x/w*.35-y/h*.25;let v=fbm(nx,ny)*1.9-.55-diag;v=Math.max(0,Math.min(.999,v));const lvl=Math.min(3,Math.floor(v*3+bayer[(y&3)*4+(x&3)]));const c=palette[lvl],i=(y*w+x)*4;d[i]=c[0];d[i+1]=c[1];d[i+2]=c[2];d[i+3]=255}}ctx.putImageData(img,0,0)}draw();document.addEventListener("DOMContentLoaded",draw);addEventListener("resize",()=>{cancelAnimationFrame(raf);raf=requestAnimationFrame(draw)})})();</script>
+
+
+<main class="relative z-[1] mx-auto flex max-w-[480px] flex-col gap-6 px-4 pb-20 pt-14">
+  
+  <section class="notched bg-night px-6 pb-7 pt-9 text-center ring-4 ring-inset ring-cream" aria-label="Perfil">
+    <img class="mx-auto block h-28 w-28 object-cover ring-4 ring-cream [image-rendering:pixelated]" src="https://media.stronglify.com/295/link-nube-01-1790718171-1791468408.jpg" alt="Retrato de Nube 8"/>
+    <h1 class="mt-7 font-display text-[24px] font-normal min-[421px]:text-[32px]">NUBE 8</h1>
+    <span class="mt-3 block text-[24px] text-haze">@nube8</span>
+    <p class="mx-auto mt-3 max-w-[30ch] text-haze">Estudio indie de videojuegos en pixel art. Hacemos mundos pequeños con mucho cielo.</p>
+  </section>
+
+  
+  <ul class="flex flex-col gap-4">
+    
+    <li class="press">
+      <a class="notched group relative grid grid-cols-[32px_1fr_32px] items-center gap-3 bg-night p-4 text-center ring-4 ring-inset ring-cream hover:bg-cream hover:text-night focus-visible:bg-cream focus-visible:text-night focus-visible:outline-none active:translate-y-1" href="#">
+        <span class="grid place-items-center" aria-hidden="true" data-icono="juego">
+          <svg class="hidden h-6 w-6 [[data-icono=juego]_&amp;]:block" viewBox="0 0 12 12" fill="currentColor" shape-rendering="crispEdges"><path d="M1 3h10v6H1zM2 4v4h8V4zM3 5h1v1h1v1H4v1H3zM7 5h1v1H7zM8 6h1v1H8z"></path></svg>
+          <svg class="hidden h-6 w-6 [[data-icono=matraz]_&amp;]:block" viewBox="0 0 12 12" fill="currentColor" shape-rendering="crispEdges"><path d="M5 1h2v1h1v1h1v2H8v1H7v2h1v1h1v1h1v2H2v-2h1V9h1V8h1V6H4V5H3V3h1V2h1z"></path></svg>
+          <svg class="hidden h-6 w-6 [[data-icono=documento]_&amp;]:block" viewBox="0 0 12 12" fill="currentColor" shape-rendering="crispEdges"><path d="M2 1h7v1h1v9H2zM3 2v8h6V3H8V2zM4 4h4v1H4zM4 6h4v1H4zM4 8h3v1H4z"></path></svg>
+          <svg class="hidden h-6 w-6 [[data-icono=musica]_&amp;]:block" viewBox="0 0 12 12" fill="currentColor" shape-rendering="crispEdges"><path d="M5 1h6v8H9V3H6v7H2V7h3z"></path></svg>
+          <svg class="hidden h-6 w-6 [[data-icono=chat]_&amp;]:block" viewBox="0 0 12 12" fill="currentColor" shape-rendering="crispEdges"><path d="M1 2h10v7H5l-2 2V9H1zM2 3v5h2v1l1-1h5V3z"></path></svg>
+          <svg class="hidden h-6 w-6 [[data-icono=sobre]_&amp;]:block" viewBox="0 0 12 12" fill="currentColor" shape-rendering="crispEdges"><path d="M1 2h10v8H1zM2 3v1h1v1h1v1h1v1h2V6h1V5h1V4h1V3zM2 5v4h8V5H9v1H8v1H7v1H5V7H4V6H3V5z"></path></svg>
+        </span>
+        <span>
+          <span class="font-display text-[12px] leading-[1.6]">Jugar Cielo Roto</span><br/>
+          <span class="text-[20px] text-haze group-hover:text-dusk group-focus-visible:text-dusk">Demo gratis en el navegador</span>
+        </span>
+        <span class="justify-self-center font-display text-[16px] transition-transform duration-150 ease-[steps(2)] group-hover:translate-x-1 group-focus-visible:translate-x-1 motion-reduce:transition-none" aria-hidden="true">&gt;</span>
+      </a>
+    </li>
+    
+    <li class="press">
+      <a class="notched group relative grid grid-cols-[32px_1fr_32px] items-center gap-3 bg-night p-4 text-center ring-4 ring-inset ring-cream hover:bg-cream hover:text-night focus-visible:bg-cream focus-visible:text-night focus-visible:outline-none active:translate-y-1" href="#">
+        <span class="grid place-items-center" aria-hidden="true" data-icono="matraz">
+          <svg class="hidden h-6 w-6 [[data-icono=juego]_&amp;]:block" viewBox="0 0 12 12" fill="currentColor" shape-rendering="crispEdges"><path d="M1 3h10v6H1zM2 4v4h8V4zM3 5h1v1h1v1H4v1H3zM7 5h1v1H7zM8 6h1v1H8z"></path></svg>
+          <svg class="hidden h-6 w-6 [[data-icono=matraz]_&amp;]:block" viewBox="0 0 12 12" fill="currentColor" shape-rendering="crispEdges"><path d="M5 1h2v1h1v1h1v2H8v1H7v2h1v1h1v1h1v2H2v-2h1V9h1V8h1V6H4V5H3V3h1V2h1z"></path></svg>
+          <svg class="hidden h-6 w-6 [[data-icono=documento]_&amp;]:block" viewBox="0 0 12 12" fill="currentColor" shape-rendering="crispEdges"><path d="M2 1h7v1h1v9H2zM3 2v8h6V3H8V2zM4 4h4v1H4zM4 6h4v1H4zM4 8h3v1H4z"></path></svg>
+          <svg class="hidden h-6 w-6 [[data-icono=musica]_&amp;]:block" viewBox="0 0 12 12" fill="currentColor" shape-rendering="crispEdges"><path d="M5 1h6v8H9V3H6v7H2V7h3z"></path></svg>
+          <svg class="hidden h-6 w-6 [[data-icono=chat]_&amp;]:block" viewBox="0 0 12 12" fill="currentColor" shape-rendering="crispEdges"><path d="M1 2h10v7H5l-2 2V9H1zM2 3v5h2v1l1-1h5V3z"></path></svg>
+          <svg class="hidden h-6 w-6 [[data-icono=sobre]_&amp;]:block" viewBox="0 0 12 12" fill="currentColor" shape-rendering="crispEdges"><path d="M1 2h10v8H1zM2 3v1h1v1h1v1h1v1h2V6h1V5h1V4h1V3zM2 5v4h8V5H9v1H8v1H7v1H5V7H4V6H3V5z"></path></svg>
+        </span>
+        <span>
+          <span class="font-display text-[12px] leading-[1.6]">Wishlist en Steam</span><br/>
+          <span class="text-[20px] text-haze group-hover:text-dusk group-focus-visible:text-dusk">Lanzamiento en primavera</span>
+        </span>
+        <span class="justify-self-center font-display text-[16px] transition-transform duration-150 ease-[steps(2)] group-hover:translate-x-1 group-focus-visible:translate-x-1 motion-reduce:transition-none" aria-hidden="true">&gt;</span>
+      </a>
+    </li>
+    
+    <li class="press">
+      <a class="notched group relative grid grid-cols-[32px_1fr_32px] items-center gap-3 bg-night p-4 text-center ring-4 ring-inset ring-cream hover:bg-cream hover:text-night focus-visible:bg-cream focus-visible:text-night focus-visible:outline-none active:translate-y-1" href="#">
+        <span class="grid place-items-center" aria-hidden="true" data-icono="documento">
+          <svg class="hidden h-6 w-6 [[data-icono=juego]_&amp;]:block" viewBox="0 0 12 12" fill="currentColor" shape-rendering="crispEdges"><path d="M1 3h10v6H1zM2 4v4h8V4zM3 5h1v1h1v1H4v1H3zM7 5h1v1H7zM8 6h1v1H8z"></path></svg>
+          <svg class="hidden h-6 w-6 [[data-icono=matraz]_&amp;]:block" viewBox="0 0 12 12" fill="currentColor" shape-rendering="crispEdges"><path d="M5 1h2v1h1v1h1v2H8v1H7v2h1v1h1v1h1v2H2v-2h1V9h1V8h1V6H4V5H3V3h1V2h1z"></path></svg>
+          <svg class="hidden h-6 w-6 [[data-icono=documento]_&amp;]:block" viewBox="0 0 12 12" fill="currentColor" shape-rendering="crispEdges"><path d="M2 1h7v1h1v9H2zM3 2v8h6V3H8V2zM4 4h4v1H4zM4 6h4v1H4zM4 8h3v1H4z"></path></svg>
+          <svg class="hidden h-6 w-6 [[data-icono=musica]_&amp;]:block" viewBox="0 0 12 12" fill="currentColor" shape-rendering="crispEdges"><path d="M5 1h6v8H9V3H6v7H2V7h3z"></path></svg>
+          <svg class="hidden h-6 w-6 [[data-icono=chat]_&amp;]:block" viewBox="0 0 12 12" fill="currentColor" shape-rendering="crispEdges"><path d="M1 2h10v7H5l-2 2V9H1zM2 3v5h2v1l1-1h5V3z"></path></svg>
+          <svg class="hidden h-6 w-6 [[data-icono=sobre]_&amp;]:block" viewBox="0 0 12 12" fill="currentColor" shape-rendering="crispEdges"><path d="M1 2h10v8H1zM2 3v1h1v1h1v1h1v1h2V6h1V5h1V4h1V3zM2 5v4h8V5H9v1H8v1H7v1H5V7H4V6H3V5z"></path></svg>
+        </span>
+        <span>
+          <span class="font-display text-[12px] leading-[1.6]">Devlog</span><br/>
+          <span class="text-[20px] text-haze group-hover:text-dusk group-focus-visible:text-dusk">Cómo dibujamos cada nube</span>
+        </span>
+        <span class="justify-self-center font-display text-[16px] transition-transform duration-150 ease-[steps(2)] group-hover:translate-x-1 group-focus-visible:translate-x-1 motion-reduce:transition-none" aria-hidden="true">&gt;</span>
+      </a>
+    </li>
+    
+    <li class="press">
+      <a class="notched group relative grid grid-cols-[32px_1fr_32px] items-center gap-3 bg-night p-4 text-center ring-4 ring-inset ring-cream hover:bg-cream hover:text-night focus-visible:bg-cream focus-visible:text-night focus-visible:outline-none active:translate-y-1" href="#">
+        <span class="grid place-items-center" aria-hidden="true" data-icono="musica">
+          <svg class="hidden h-6 w-6 [[data-icono=juego]_&amp;]:block" viewBox="0 0 12 12" fill="currentColor" shape-rendering="crispEdges"><path d="M1 3h10v6H1zM2 4v4h8V4zM3 5h1v1h1v1H4v1H3zM7 5h1v1H7zM8 6h1v1H8z"></path></svg>
+          <svg class="hidden h-6 w-6 [[data-icono=matraz]_&amp;]:block" viewBox="0 0 12 12" fill="currentColor" shape-rendering="crispEdges"><path d="M5 1h2v1h1v1h1v2H8v1H7v2h1v1h1v1h1v2H2v-2h1V9h1V8h1V6H4V5H3V3h1V2h1z"></path></svg>
+          <svg class="hidden h-6 w-6 [[data-icono=documento]_&amp;]:block" viewBox="0 0 12 12" fill="currentColor" shape-rendering="crispEdges"><path d="M2 1h7v1h1v9H2zM3 2v8h6V3H8V2zM4 4h4v1H4zM4 6h4v1H4zM4 8h3v1H4z"></path></svg>
+          <svg class="hidden h-6 w-6 [[data-icono=musica]_&amp;]:block" viewBox="0 0 12 12" fill="currentColor" shape-rendering="crispEdges"><path d="M5 1h6v8H9V3H6v7H2V7h3z"></path></svg>
+          <svg class="hidden h-6 w-6 [[data-icono=chat]_&amp;]:block" viewBox="0 0 12 12" fill="currentColor" shape-rendering="crispEdges"><path d="M1 2h10v7H5l-2 2V9H1zM2 3v5h2v1l1-1h5V3z"></path></svg>
+          <svg class="hidden h-6 w-6 [[data-icono=sobre]_&amp;]:block" viewBox="0 0 12 12" fill="currentColor" shape-rendering="crispEdges"><path d="M1 2h10v8H1zM2 3v1h1v1h1v1h1v1h2V6h1V5h1V4h1V3zM2 5v4h8V5H9v1H8v1H7v1H5V7H4V6H3V5z"></path></svg>
+        </span>
+        <span>
+          <span class="font-display text-[12px] leading-[1.6]">Banda sonora</span><br/>
+          <span class="text-[20px] text-haze group-hover:text-dusk group-focus-visible:text-dusk">Chiptune original en Bandcamp</span>
+        </span>
+        <span class="justify-self-center font-display text-[16px] transition-transform duration-150 ease-[steps(2)] group-hover:translate-x-1 group-focus-visible:translate-x-1 motion-reduce:transition-none" aria-hidden="true">&gt;</span>
+      </a>
+    </li>
+    
+    <li class="press">
+      <a class="notched group relative grid grid-cols-[32px_1fr_32px] items-center gap-3 bg-night p-4 text-center ring-4 ring-inset ring-cream hover:bg-cream hover:text-night focus-visible:bg-cream focus-visible:text-night focus-visible:outline-none active:translate-y-1" href="#">
+        <span class="grid place-items-center" aria-hidden="true" data-icono="chat">
+          <svg class="hidden h-6 w-6 [[data-icono=juego]_&amp;]:block" viewBox="0 0 12 12" fill="currentColor" shape-rendering="crispEdges"><path d="M1 3h10v6H1zM2 4v4h8V4zM3 5h1v1h1v1H4v1H3zM7 5h1v1H7zM8 6h1v1H8z"></path></svg>
+          <svg class="hidden h-6 w-6 [[data-icono=matraz]_&amp;]:block" viewBox="0 0 12 12" fill="currentColor" shape-rendering="crispEdges"><path d="M5 1h2v1h1v1h1v2H8v1H7v2h1v1h1v1h1v2H2v-2h1V9h1V8h1V6H4V5H3V3h1V2h1z"></path></svg>
+          <svg class="hidden h-6 w-6 [[data-icono=documento]_&amp;]:block" viewBox="0 0 12 12" fill="currentColor" shape-rendering="crispEdges"><path d="M2 1h7v1h1v9H2zM3 2v8h6V3H8V2zM4 4h4v1H4zM4 6h4v1H4zM4 8h3v1H4z"></path></svg>
+          <svg class="hidden h-6 w-6 [[data-icono=musica]_&amp;]:block" viewBox="0 0 12 12" fill="currentColor" shape-rendering="crispEdges"><path d="M5 1h6v8H9V3H6v7H2V7h3z"></path></svg>
+          <svg class="hidden h-6 w-6 [[data-icono=chat]_&amp;]:block" viewBox="0 0 12 12" fill="currentColor" shape-rendering="crispEdges"><path d="M1 2h10v7H5l-2 2V9H1zM2 3v5h2v1l1-1h5V3z"></path></svg>
+          <svg class="hidden h-6 w-6 [[data-icono=sobre]_&amp;]:block" viewBox="0 0 12 12" fill="currentColor" shape-rendering="crispEdges"><path d="M1 2h10v8H1zM2 3v1h1v1h1v1h1v1h2V6h1V5h1V4h1V3zM2 5v4h8V5H9v1H8v1H7v1H5V7H4V6H3V5z"></path></svg>
+        </span>
+        <span>
+          <span class="font-display text-[12px] leading-[1.6]">Comunidad</span><br/>
+          <span class="text-[20px] text-haze group-hover:text-dusk group-focus-visible:text-dusk">Únete al servidor de Discord</span>
+        </span>
+        <span class="justify-self-center font-display text-[16px] transition-transform duration-150 ease-[steps(2)] group-hover:translate-x-1 group-focus-visible:translate-x-1 motion-reduce:transition-none" aria-hidden="true">&gt;</span>
+      </a>
+    </li>
+    
+    <li class="press">
+      <a class="notched group relative grid grid-cols-[32px_1fr_32px] items-center gap-3 bg-night p-4 text-center ring-4 ring-inset ring-cream hover:bg-cream hover:text-night focus-visible:bg-cream focus-visible:text-night focus-visible:outline-none active:translate-y-1" href="#">
+        <span class="grid place-items-center" aria-hidden="true" data-icono="sobre">
+          <svg class="hidden h-6 w-6 [[data-icono=juego]_&amp;]:block" viewBox="0 0 12 12" fill="currentColor" shape-rendering="crispEdges"><path d="M1 3h10v6H1zM2 4v4h8V4zM3 5h1v1h1v1H4v1H3zM7 5h1v1H7zM8 6h1v1H8z"></path></svg>
+          <svg class="hidden h-6 w-6 [[data-icono=matraz]_&amp;]:block" viewBox="0 0 12 12" fill="currentColor" shape-rendering="crispEdges"><path d="M5 1h2v1h1v1h1v2H8v1H7v2h1v1h1v1h1v2H2v-2h1V9h1V8h1V6H4V5H3V3h1V2h1z"></path></svg>
+          <svg class="hidden h-6 w-6 [[data-icono=documento]_&amp;]:block" viewBox="0 0 12 12" fill="currentColor" shape-rendering="crispEdges"><path d="M2 1h7v1h1v9H2zM3 2v8h6V3H8V2zM4 4h4v1H4zM4 6h4v1H4zM4 8h3v1H4z"></path></svg>
+          <svg class="hidden h-6 w-6 [[data-icono=musica]_&amp;]:block" viewBox="0 0 12 12" fill="currentColor" shape-rendering="crispEdges"><path d="M5 1h6v8H9V3H6v7H2V7h3z"></path></svg>
+          <svg class="hidden h-6 w-6 [[data-icono=chat]_&amp;]:block" viewBox="0 0 12 12" fill="currentColor" shape-rendering="crispEdges"><path d="M1 2h10v7H5l-2 2V9H1zM2 3v5h2v1l1-1h5V3z"></path></svg>
+          <svg class="hidden h-6 w-6 [[data-icono=sobre]_&amp;]:block" viewBox="0 0 12 12" fill="currentColor" shape-rendering="crispEdges"><path d="M1 2h10v8H1zM2 3v1h1v1h1v1h1v1h2V6h1V5h1V4h1V3zM2 5v4h8V5H9v1H8v1H7v1H5V7H4V6H3V5z"></path></svg>
+        </span>
+        <span>
+          <span class="font-display text-[12px] leading-[1.6]">Prensa y contacto</span><br/>
+          <span class="text-[20px] text-haze group-hover:text-dusk group-focus-visible:text-dusk">Kit de prensa y colaboraciones</span>
+        </span>
+        <span class="justify-self-center font-display text-[16px] transition-transform duration-150 ease-[steps(2)] group-hover:translate-x-1 group-focus-visible:translate-x-1 motion-reduce:transition-none" aria-hidden="true">&gt;</span>
+      </a>
+    </li>
+    
+  </ul>
+</main>
+</body></html>
